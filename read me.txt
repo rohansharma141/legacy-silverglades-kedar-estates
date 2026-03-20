@@ -1,0 +1,27 @@
+Before running the script, you will need to install the Google Generative AI SDK:
+
+pip install google-generativeai
+
+You will also need a free Gemini API key from Google AI Studio.
+
+Save the following code as a .py file. Put your PDF in the same folder and update the PDF_PATH and API_KEY variables.
+
+
+
+How to use it
+Ensure your PDF is in the same directory as the script.
+
+Paste your Google AI API key into the script.
+
+Run the script python generate_site.py.
+
+It will read the PDF, structure it perfectly for the React components, swap out the __PROJECT_DATA_PLACEHOLDER__, and spit out a ready-to-go index.html. You can hook the WhatsApp icon in the code directly to Prithvi's number later on.
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+Prerequisites
+You will need to install the PyMuPDF library. Open your terminal and run:
+
+pip install PyMuPDF
+
+The Extraction Script (extract_images.py)
