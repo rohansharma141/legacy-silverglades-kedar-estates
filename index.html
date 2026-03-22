@@ -3,13 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Legacy by Silverglades | Kedar Estates</title>
     
+    <title>The Legacy by Silverglades | Luxury 3, 4 & 5 BHK in Sector-63A, Gurugram</title>
+    <meta name="description" content="Discover The Legacy by Silverglades in Sector-63A, Gurugram. Ultra-luxury 3, 4, and 5 BHK residences and penthouses with unblocked Aravalli views. Book your visit with Kedar Estates.">
+    <meta name="keywords" content="The Legacy, Silverglades, Sector 63A Gurugram, Luxury Apartments Gurgaon, 3 BHK Gurgaon, 4 BHK Gurgaon, Kedar Estates">
+    
+    <meta property="og:title" content="The Legacy by Silverglades | Kedar Estates">
+    <meta property="og:description" content="Experience ultra-luxury living with premium amenities, golf course proximity, and spectacular Aravalli views.">
+    <meta property="og:image" content="./images/The Legacy by Silverglades - Presentation_Aug/hero-bg.jpeg">
+    <meta property="og:type" content="website">
+
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+	
+	<script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -39,13 +50,39 @@
         /* Hide scrollbar for cleaner mobile tables but keep functionality */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Custom scrollbar for Prithvi Chat */
+        .chat-scroll::-webkit-scrollbar { width: 6px; }
+        .chat-scroll::-webkit-scrollbar-track { background: #1a1d20; }
+        .chat-scroll::-webkit-scrollbar-thumb { background: #c19a6b; border-radius: 4px; }
+		
+		/* Styles for parsed Markdown inside the chat */
+        .prose-chat p { margin-bottom: 0.5rem; }
+        .prose-chat p:last-child { margin-bottom: 0; }
+        .prose-chat strong { font-weight: 700; }
+        .prose-chat ul { list-style-type: disc; padding-left: 1.25rem; margin-top: 0.25rem; margin-bottom: 0.5rem; }
+        .prose-chat li { margin-bottom: 0.25rem; }
     </style>
+	
+	<script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      // Replace AW-XXXXXXXXXX with your actual Google Ads ID
+      gtag('config', 'AW-XXXXXXXXXX'); 
+      
+      // Optional: If you also set up a Google Analytics 4 property, uncomment and add the ID below
+      // gtag('config', 'G-YYYYYYYYYY'); 
+    </script>
+</head>
 </head>
 <body id="top">
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useRef } = React;
 
         // --- Master Data Object ---
         const projectData = {
@@ -95,10 +132,7 @@
         const submitLeadAndRedirect = (name, phone, email, onSuccessCallback) => {
             // 1. Send data to Web3Forms in the background
             const formData = new FormData();
-            
-            // *** IMPORTANT: REPLACE THE STRING BELOW WITH YOUR WEB3FORMS ACCESS KEY ***
             formData.append("access_key", "c9a935f4-eac3-4c1c-85aa-963b55d9c714"); 
-            
             formData.append("subject", `New Lead: ${projectData.name}`);
             formData.append("name", name);
             formData.append("phone", phone);
@@ -109,9 +143,16 @@
                 body: formData
             }).catch(err => console.error("Web3Forms Error:", err));
 
-            
-
-            // 3. Trigger success actions (like clearing form or closing modal)
+            // 2. FIRE GOOGLE ADS CONVERSION
+            // Make sure to replace 'AW-XXXXXXXXXX/YYYYYYYYYYYYYYYY' with your actual Conversion Label
+            if (typeof window.gtag === 'function') {
+                window.gtag('event', 'conversion', {
+                    'send_to': 'AW-XXXXXXXXXX/YOUR_CONVERSION_LABEL'
+                });
+                console.log("Google Ads Conversion Fired!");
+            }
+			
+            // 3. Trigger success actions
             if (onSuccessCallback) onSuccessCallback();
         };
 
@@ -130,7 +171,6 @@
             const handleFormSubmit = (e) => {
                 e.preventDefault();
                 submitLeadAndRedirect(name, phone, email, () => {
-                    // Reset form and close modal
                     setName(""); setPhone(""); setEmail("");
                     onClose();
                 });
@@ -242,7 +282,7 @@
             const handleHeroSubmit = (e) => {
                 e.preventDefault();
                 submitLeadAndRedirect(name, phone, email, () => {
-                    setName(""); setPhone(""); setEmail(""); // Reset after submission
+                    setName(""); setPhone(""); setEmail("");
                 });
             };
 
@@ -320,7 +360,6 @@
                         </table>
                     </div>
                     
-                    {/* Master Plan Image Section */}
                     <div className="mt-10 md:mt-16 bg-legacy-gray border border-gray-700 rounded-xl overflow-hidden shadow-2xl max-w-5xl mx-auto relative group p-2 md:p-4 bg-opacity-50">
                         <img src={projectData.masterPlanImage} alt="Master Plan" className="w-full h-auto object-cover rounded shadow-inner" onError={(e) => {e.target.style.display='none'; e.target.nextSibling.style.display='flex';}} />
                         <div className="hidden absolute inset-0 items-center justify-center text-gray-500 bg-legacy-gray min-h-[200px] md:min-h-[400px]">
@@ -524,7 +563,7 @@
                         
                         <div className="w-full h-[300px] md:h-full md:min-h-[500px] bg-legacy-gray rounded-xl overflow-hidden flex items-center justify-center border-2 border-legacy-rosegold/30 shadow-2xl relative">
                             <iframe 
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14041.670261947238!2d77.09062335!3d28.37640275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d226a2f7c0001%3A0x656461a29a008c2!2sSector%2063A%2C%20Gurugram%2C%20Haryana!5e0!3m2!1sen!2sin!4v1715000000000!5m2!1sen!2sin" 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14041.547565985167!2d77.085816!3d28.3773489!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d223297a7832b%3A0xcda6dc6814bb6b2e!2sSector%2063A%2C%20Gurugram%2C%20Haryana!5e0!3m2!1sen!2sin!4v1710900000000!5m2!1sen!2sin" 
                                 width="100%" 
                                 height="100%" 
                                 style={{ border: 0, position: 'absolute', top: 0, left: 0 }} 
@@ -591,19 +630,133 @@
             </footer>
         );
 
-        const FloatingCTAs = () => {
+        // --- Prithvi AI Agent Component ---
+        // --- Prithvi AI Agent Component ---
+        const PrithviChatWidget = ({ isOpen, onClose }) => {
+            const [messages, setMessages] = useState([
+                { sender: 'bot', text: `Hello! I am Prithvi, the AI advisory agent for ${projectData.brokerage}. How can I assist you with The Legacy by Silverglades today?` }
+            ]);
+            const [input, setInput] = useState("");
+            const messagesEndRef = useRef(null);
+
+            // 1. Generate a random session ID for this user's visit
+            const [sessionId] = useState(() => "user_" + Math.random().toString(36).substring(2, 10));
+
+            const scrollToBottom = () => {
+                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            };
+
+            useEffect(() => {
+                scrollToBottom();
+            }, [messages, isOpen]);
+
+            // 2. The REAL Backend Integration
+            const handleSendMessage = async (e) => {
+                e.preventDefault();
+                const userText = input.trim();
+                if (!userText) return;
+
+                // Add user message to UI immediately
+                setMessages(prev => [...prev, { sender: 'user', text: userText }]);
+                setInput("");
+
+                try {
+                    // 1. Point to /process-lead
+                    const response = await fetch("http://localhost:8000/process-lead", { 
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            lead_text: userText,  // Changed from 'message' to match main.py
+                            source: "web_widget",
+                            project_id: "the_legacy_silverglades",
+                            broker_id: "vinod_joshi_kedar_estates",
+                            session_id: sessionId
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+
+                    const data = await response.json();
+                    
+                    // 2. Use 'data.reply' instead of 'data.response' to match main.py's PrithviWebResponse
+                    setMessages(prev => [...prev, { sender: 'bot', text: data.reply }]);
+
+                } catch (error) {
+                    console.error("Prithvi Backend Error:", error);
+                    setMessages(prev => [...prev, { 
+                        sender: 'bot', 
+                        text: "Sorry, I am having trouble connecting to the server right now. Please try again in a moment." 
+                    }]);
+                }
+            };
+
+            if (!isOpen) return null;
+
+            return (
+                <div className="fixed bottom-24 right-4 md:right-8 w-[90%] md:w-96 bg-legacy-dark border border-legacy-rosegold/50 rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden origin-bottom-right transition-transform shadow-[0_10px_40px_-10px_rgba(193,154,107,0.3)]">
+                    {/* Header */}
+                    <div className="bg-[#111315] border-b border-gray-700 p-4 flex justify-between items-center">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-legacy-rosegold rounded-full flex items-center justify-center shadow-inner">
+                                <i data-lucide="bot" className="text-legacy-dark w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 className="text-white font-semibold">Prithvi AI</h4>
+                                <p className="text-xs text-legacy-rosegold flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500 block"></span> Online</p>
+                            </div>
+                        </div>
+                        <button onClick={onClose} className="text-gray-400 hover:text-white transition">
+                            <i data-lucide="x" className="w-5 h-5"></i>
+                        </button>
+                    </div>
+
+                    {/* Chat Area */}
+                    <div className="h-80 p-4 overflow-y-auto chat-scroll flex flex-col gap-3 bg-legacy-dark/50">
+                        {messages.map((msg, idx) => (
+                            <div key={idx} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                <div 
+                                    className={`max-w-[80%] p-3 rounded-lg text-sm prose-chat ${msg.sender === 'user' ? 'bg-legacy-rosegold text-legacy-dark rounded-br-none' : 'bg-legacy-gray text-gray-200 border border-gray-700 rounded-bl-none'}`}
+                                    dangerouslySetInnerHTML={{ __html: marked.parse(msg.text) }}
+                                />
+                            </div>
+                        ))}
+                        <div ref={messagesEndRef} />
+                    </div>
+
+                    {/* Input Area */}
+                    <div className="p-3 bg-[#111315] border-t border-gray-700">
+                        <form onSubmit={handleSendMessage} className="flex gap-2">
+                            <input 
+                                type="text" 
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                placeholder="Type your message..." 
+                                className="flex-1 bg-legacy-gray border border-gray-600 rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:border-legacy-rosegold transition"
+                            />
+                            <button type="submit" className="w-10 h-10 bg-legacy-rosegold rounded-full flex items-center justify-center text-legacy-dark hover:bg-white transition flex-shrink-0">
+                                <i data-lucide="send" className="w-4 h-4 ml-1"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        const FloatingCTAs = ({ onTogglePrithvi, isPrithviOpen }) => {
             const [showBackToTop, setShowBackToTop] = useState(false);
 
             useEffect(() => {
-                const handleScroll = () => {
-                    setShowBackToTop(window.scrollY > 300);
-                };
+                const handleScroll = () => setShowBackToTop(window.scrollY > 300);
                 window.addEventListener('scroll', handleScroll);
                 return () => window.removeEventListener('scroll', handleScroll);
             }, []);
 
             return (
-                <div className="fixed bottom-6 right-4 md:bottom-8 md:right-8 flex flex-col space-y-3 md:space-y-4 z-40">
+                <div className="fixed bottom-6 right-4 md:bottom-8 md:right-8 flex flex-col space-y-3 md:space-y-4 z-40 items-end">
                     <a href="#top" className={`w-10 h-10 md:w-12 md:h-12 bg-gray-800 border border-gray-600 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300 group cursor-pointer relative ${showBackToTop ? 'opacity-80 hover:opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
                         <i data-lucide="arrow-up" className="text-white w-5 h-5 md:w-6 md:h-6"></i>
                         <span className="absolute right-14 md:right-16 bg-legacy-dark text-white text-xs md:text-sm py-1.5 md:py-2 px-2 md:px-3 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap border border-gray-700">Back to Top</span>
@@ -616,10 +769,17 @@
                         <svg className="w-6 h-6 md:w-9 md:h-9 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-5.824 4.74-10.563 10.567-10.563 5.824 0 10.564 4.74 10.564 10.564 0 5.825-4.74 10.565-10.564 10.564z"/></svg>
                         <span className="absolute right-14 md:right-20 bg-legacy-dark text-white text-xs md:text-sm py-1.5 md:py-2 px-2 md:px-3 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap border border-gray-700 font-semibold">WhatsApp Chat</span>
                     </a>
-                    <div className="w-12 h-12 md:w-16 md:h-16 bg-legacy-rosegold rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition group cursor-pointer relative" onClick={() => alert('Prithvi AI Agent Widget will open here.')}>
-                        <i data-lucide="message-square" className="text-legacy-dark w-5 h-5 md:w-7 md:h-7"></i>
-                        <span className="absolute right-14 md:right-20 bg-legacy-dark text-white text-xs md:text-sm py-1.5 md:py-2 px-2 md:px-3 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap border border-gray-700 font-semibold">Chat with Prithvi AI</span>
-                    </div>
+                    
+                    {/* Prithvi Agent Toggle Button */}
+                    <button onClick={onTogglePrithvi} className={`w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(193,154,107,0.4)] transition-all duration-300 group relative ${isPrithviOpen ? 'bg-white text-legacy-dark scale-110' : 'bg-legacy-rosegold text-legacy-dark hover:scale-110'}`}>
+                        {isPrithviOpen ? <i data-lucide="x" className="w-5 h-5 md:w-7 md:h-7"></i> : <i data-lucide="bot" className="w-5 h-5 md:w-7 md:h-7"></i>}
+                        <span className="absolute right-14 md:right-20 bg-legacy-dark text-white text-xs md:text-sm py-1.5 md:py-2 px-2 md:px-3 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap border border-gray-700 font-semibold">
+                            {isPrithviOpen ? 'Close Prithvi AI' : 'Chat with Prithvi AI'}
+                        </span>
+                        
+                        {/* Pulse animation for the bot icon when closed to attract attention */}
+                        {!isPrithviOpen && <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-legacy-dark animate-pulse"></span>}
+                    </button>
                 </div>
             );
         };
@@ -627,6 +787,7 @@
         const App = () => {
             const [isModalOpen, setIsModalOpen] = useState(false);
             const [expandedImage, setExpandedImage] = useState(null);
+            const [isPrithviOpen, setIsPrithviOpen] = useState(false);
 
             useEffect(() => { 
                 lucide.createIcons(); 
@@ -642,7 +803,10 @@
                     <FloorPlans onImageClick={(imgSrc) => setExpandedImage(imgSrc)} />
                     <Location onImageClick={(imgSrc) => setExpandedImage(imgSrc)} />
                     <Footer />
-                    <FloatingCTAs />
+                    
+                    {/* Floating Controls & Chat Widget */}
+                    <FloatingCTAs onTogglePrithvi={() => setIsPrithviOpen(!isPrithviOpen)} isPrithviOpen={isPrithviOpen} />
+                    <PrithviChatWidget isOpen={isPrithviOpen} onClose={() => setIsPrithviOpen(false)} />
                     
                     <EnquiryModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
                     <ImageLightboxModal imageSrc={expandedImage} onClose={() => setExpandedImage(null)} />
