@@ -657,27 +657,29 @@
             // 2. The REAL Backend Integration
             
             const handleSendMessage = async (e) => {
-                // Allow function to be called by form event OR directly with a string
+                // Prevent crash: only call preventDefault if 'e' is a form event
                 if (e && e.preventDefault) e.preventDefault();
-                const userText = typeof e === 'string' ? e : input.trim();
+
+                // Logic fix: use the passed string if available, otherwise use input state
+                const userText = (typeof e === 'string' ? e : input).trim();
                 
                 if (!userText) return;
 
-                // Add user message to UI immediately
+                // Add user message to UI
                 setMessages(prev => [...prev, { sender: 'user', text: userText }]);
                 setInput("");
 
                 try {
-                    // 1. Point to /process-lead
-                    const response = await fetch(" https://palindromic-kalel-nonhazardous.ngrok-free.dev/process-lead", { 
+                    // Note: Removed the leading space from your URL below
+                    const response = await fetch("https://palindromic-kalel-nonhazardous.ngrok-free.dev/process-lead", { 
                         method: "POST",
                         headers: {
                             "Accept": "application/json",
                             "Content-Type": "application/json",
-							"ngrok-skip-browser-warning": "true"
+                            "ngrok-skip-browser-warning": "true"
                         },
                         body: JSON.stringify({
-                            lead_text: userText,  // Changed from 'message' to match main.py
+                            lead_text: userText,
                             source: "web_widget",
                             project_id: "the_legacy_silverglades",
                             broker_id: "vinod_joshi_kedar_estates",
@@ -685,41 +687,33 @@
                         })
                     });
 
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok");
-                    }
+                    if (!response.ok) throw new Error("Network response was not ok");
 
                     const data = await response.json();
                     const aiResponseText = data.reply;
                     
-                    // --- NEW: INTERCEPTION LOGIC ---
+                    // Trigger the phone input UI if the flag is found
                     if (aiResponseText.includes('[TRIGGER_PHONE_INPUT]')) {
-                        // Strip the tag and show clean message
                         const cleanMessage = aiResponseText.replace('[TRIGGER_PHONE_INPUT]', '').trim();
                         setMessages(prev => [...prev, { sender: 'bot', text: cleanMessage }]);
-                        
-                        // Swap UI to phone input
                         setIsPhoneInputMode(true);
                     } else {
-                        // Normal behavior
                         setMessages(prev => [...prev, { sender: 'bot', text: aiResponseText }]);
                     }
-                    // -------------------------------
 
                 } catch (error) {
                     console.error("Prithvi Backend Error:", error);
                     setMessages(prev => [...prev, { 
                         sender: 'bot', 
-                        text: "Sorry, I am having trouble connecting to the server right now. Please try again in a moment." 
+                        text: "Sorry, I am having trouble connecting to the server. Please try again." 
                     }]);
                 }
             };
             
             // --- NEW: PHONE SUBMIT HANDLER ---
             const handlePhoneSubmit = (e) => {
-                console.log("The React State thinks the number is.........:", phoneInputText);
                 e.preventDefault();
-                console.log("The React State thinks the number is:", phoneInputText);
+                
                 const justDigits = phoneInputText.replace(/\D/g, ''); // Strip out non-numbers
 
                 if (justDigits.length >= 10) {
